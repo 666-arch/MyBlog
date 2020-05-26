@@ -144,6 +144,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ArticleController.cs" />
     <Compile Include="Controllers\CateController.cs" />
+    <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LinkController.cs" />
     <Compile Include="Global.asax.cs">
@@ -582,6 +583,7 @@
     <Content Include="Views\Home\showLastest.cshtml" />
     <Content Include="Views\Home\showLinks.cshtml" />
     <Content Include="Views\Article\Detail.cshtml" />
+    <Content Include="Views\Default\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
