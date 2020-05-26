@@ -1,0 +1,94 @@
+﻿@using PagedList.Mvc
+@using Model.EF
+@model PagedList.IPagedList<admin>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutBackHome.cshtml";
+}
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<div class="crumb-wrap">
+    <div class="crumb-list"><i class="icon-font"></i><a href="/Admin/Info">首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">用户管理</span></div>
+</div>
+@if (ViewBag.user == "admin")
+{
+    <div class="result-wrap">
+        <form name="myform" id="myform" method="post">
+            <div class="result-title">
+                <div class="result-list">
+                    <a onclick="addLayer()" href="#"><i class="icon-font"></i>添加管理员</a>
+                    <a id="batchDel" href="javascript:void(0)" onclick=""><i class="icon-font"></i>批量删除</a>
+                </div>
+            </div>
+            <div class="result-content">
+                <table class="result-tab" width="100%">
+                    <tr>
+                        <th class="tc" width="5%"><input type="checkbox" class="allChoose" /></th>
+                        <th>ID</th>
+                        <th>用户名</th>
+                        <th>密码</th>
+                        <th>操作</th>
+                    </tr>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="tc"><input name="id[]" value="@item.id" type="checkbox" class="singleChoose"></td>
+                            <td>@item.id</td>
+                            <td>@item.username</td>
+                            <td>@item.password</td>
+                            <td>
+                                <a href="#" class="link-update" onclick="updateLayer(@item.id)">修改</a>
+                                <a href="#" class="link-del" onclick="user_del(@item.id,this)">删除</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <div class="list-page">
+                    @Html.PagedListPager(Model,page=>Url.Action("Index",new {page }))
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        function addLayer() {
+            layer.open({
+                type: 2,//设置层类型,2:iframe层
+                title: '新增用户',//信息标题
+                maxmin: true,//窗口是否显示最大化最小化
+                shadeClose: true,//是否通过点击关闭遮罩层
+                area: ['550px', '400px'],//iframe长宽
+                content: 'Admin/UserAdd'//可用传入任意类型,这里是一个URL
+            });
+        }
+        function updateLayer(id)
+        {
+            layer.open({
+                type: 2,
+                title: '修改用户信息',
+                maxmin: true,
+                shadeClose: true,
+                area: ['550px', '400px'],
+                content: 'Admin/UpdateUser?id=' + id
+            });
+        }
+        function user_del(id,obj)
+        {
+            //参数1：询问,参数2：回调函数（参数自动补齐）
+            layer.confirm('确定要删除吗？', function (index) {
+                //请求后台
+                $.post("Admin/CheckDeleteUser", { id: id })
+                //查找每个obj元素的父元素进行删除
+                $(obj).parents("tr").remove();
+                //提示
+                layer.msg('删除成功！', { icon: 1, time: 1000 });
+            });
+        }
+
+
+    </script>
+}
+else
+{
+    <h1 style="position:relative;top:230px;text-align:center;font-size:40px">您没有权限查看此页</h1>
+}
+

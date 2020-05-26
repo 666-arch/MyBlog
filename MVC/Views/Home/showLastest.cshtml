@@ -1,0 +1,8 @@
+﻿@using Model.EF
+@model IEnumerable<article>
+    @foreach (var item in Model)
+    {
+        <li>
+            <a href="/Article/Detail?id=@item.id"target="_blank">@item.title</a>
+        </li>
+    }

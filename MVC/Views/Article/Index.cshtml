@@ -1,0 +1,116 @@
+﻿@using PagedList.Mvc
+@using Model.EF
+@model PagedList.IPagedList<article>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutBackHome.cshtml";
+}
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<div class="crumb-wrap">
+    <div class="crumb-list"><i class="icon-font"></i><a href="/Admin/Info">首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">文章管理</span></div>
+</div>
+<div class="search-wrap">
+    <div class="search-content">
+        <form action="/jscss/admin/design/index" method="post">
+            <table class="search-tab">
+            </table>
+        </form>
+    </div>
+</div>
+<div class="result-wrap">
+    <form id="myform" name="myform" method="post">
+        <div class="result-title">
+            <div class="result-list">
+                <a href="/Article/AddArticle"><i class="icon-font"></i>新增文章</a>
+                <a id="batchDel" href="javascript:void(0)" onclick="manyArticles_del()"><i class="icon-font"></i>批量删除</a>
+                <a id="updateOrd" href="~/Article/sortByUpdateTime"><i class="icon-font"></i>更新排序</a>
+            </div>
+        </div>
+        <div class="result-content">
+            <table class="result-tab" width="100%" style="text-align:center;">
+                <tr style="text-align:center">
+                    <th class="tc" width="5%"><input type="checkbox" class="allChoose" name="" /></th>
+                    <th style="text-align:center">编号</th>
+                    <th style="text-align:center">标题</th>
+                    <th style="text-align:center">所属分类</th>
+                    <th style="text-align:center">作者</th>
+                    <th style="text-align:center">描述</th>
+                    <th style="text-align:center">更新时间</th>
+                    <th style="text-align:center">操作</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    var desc = item.desc;
+                    if (desc.Length > 16)
+                    {
+                        //截取0-15的字符串，防止字符过多
+                        desc = desc.Substring(0, 15) + "...";
+                    }
+                    <tr>
+                        <td class="tc"><input type="checkbox" name="id[]" value="@item.id" class="singleChoose" /></td>
+                        <td>@item.id</td>
+                        <td>@item.title</td>
+                        <td>@item.cate.catname</td>
+                        <td>@item.admin.username</td>
+                        <td>@desc</td>
+                        <td style="width:180px;">@item.time</td>
+                        <td>
+                            <a href="/Article/Detail?id=@item.id" target="_blank" class="link-update">预览</a>
+                            <a href="/Article/UpdateArticle?id=@item.id" class="link-update">修改</a>
+                            <a href="#" onclick="article_del(@item.id,this)" class="link-update">删除</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="list-page">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+            </div>
+        </div>
+    </form>
+</div>
+
+<p id="ArticleDelete" hidden>
+    @* 地址指向 *@
+    @Href("~/Article/ArticleDelete")
+</p>
+<p id="ManyDelete" hidden>
+    @Href("~/Article/ArticleAllDelete")
+</p>
+
+<script type="text/javascript">
+    function article_del(id, obj)
+    {
+        layer.confirm('确认要删除吗？', function () {
+            $.get($("#ArticleDelete").text(), { id: id })
+            $(obj).parent("tr").remove();
+            layer.msg('删除成功！', { icon: 1, time: 1500 });
+            window.location.reload();
+        });
+    }
+    function manyArticles_del()
+    {
+        var idStr = '';
+        $('.singleChoose').each(function () {
+            if ($(this)[0].checked) {
+                idStr += $(this).val() + ',';
+            }
+        });
+        if (!idStr) {
+            alert('请至少勾选一个');
+            return;
+        } else {
+            layer.confirm('确认要删除吗？', function (index) {
+                $.get($("#ManyDelete").text(), { idStr: idStr })
+                layer.msg('删除成功！', { icon: 1, time: 1500 });
+                window.location.reload();
+            });
+        }
+    }
+    $('.allChoose').on('change', function () {
+        if ($(this).is(':checked')) {
+            $('.singleChoose').prop('checked', 'checked');
+        } else {
+            $('.singleChoose').prop('checked', '');
+        }
+    })
+</script>

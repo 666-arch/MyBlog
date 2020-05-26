@@ -1,0 +1,57 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/Assets/BackEnd/js/jquery-3.2.1.js"></script>
+    <link href="~/Assets/BackEnd/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Assets/BackEnd/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnAdd").click(function () {
+                if (!$('#cateName').val()) {
+                    alert('请输入您要添加的分类');
+                    return;
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: "IsCheckAddCate",
+                        data: $("#form-cate-add").serialize(),
+                        dataType: "json",
+                        success: function (msg) {
+                            if (msg.status == 1) {
+                                window.parent.location.reload();
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            } else {
+                                $("#texterror").text(msg.data);
+                            }
+                        }
+                    })
+                }
+
+            })
+        })
+
+    </script>
+    <title>新增文章分类</title>
+</head>
+<body>
+    <div style="align-items:center;padding:40px;"> 
+        <form id="form-cate-add" method="post">
+            <div class="form-group">
+                <label for="cateName">分类名称</label>
+                <input type="text" class="form-control" id="cateName" name="cateName" style="width:300px;"/>
+            </div>
+            <span id="texterror" style="color:red"></span>
+            <br /><br />
+            <button type="button" class="btn btn-primary" style="margin-right:30px;" id="btnAdd">添加</button>
+            <input type="reset" class="btn btn-danger" value="重置" />
+        </form>
+        <p id="testajax"></p>
+    </div>
+</body>
+</html>

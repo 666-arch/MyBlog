@@ -1,0 +1,34 @@
+﻿@using PagedList.Mvc
+@using Model.EF
+@model PagedList.IPagedList<article>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutReception.cshtml";
+    var index = 1;
+}
+    <ul class="excerpt thumb">
+        @* 输出数据库所有文章进行显示 *@
+        @foreach (var item in Model)
+        {
+            var imgSrc = index + ".jpg";
+            <li>
+                <a href="/Article/Detail?id=@item.id" class="pic">
+                    <img src="~/Assets/FrontEnd/images/@imgSrc" alt="@item.title Text" />
+                </a>
+                <h2 class="excerpt-tit">
+                    <a href="/Article/Detail?id=@item.id">@item.title</a>
+                </h2>
+                <p class="excerpt-desc" id="a-desc">
+                    @item.desc
+                </p>
+                <div class=excerpt-time>
+                    @item.time
+                </div>
+            </li>
+            index++;
+        }
+    </ul>
+    <div class="paging" style="position:relative;left:-270px;">
+        @Html.PagedListPager(Model,page=>Url.Action("Index",new {page }))
+    </div>
+

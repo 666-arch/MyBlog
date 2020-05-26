@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="applicable-device" content="pc">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Assets/FrontEnd/css/style.css" rel="stylesheet" />
+
+    <script src="~/Assets/BackEnd/js/jquery-3.2.1.js"></script>
+    <script src="~/Content/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
+    <link href="~/Content/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css" rel="stylesheet" />
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+    <script src="~/Assets/BackEnd/js/layer.js"></script>
+    <link href="~/Assets/BackEnd/css/layer.css" rel="stylesheet" />
+    @*@Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")*@
+    <title>@ViewBag.Title</title>
+    <style type="text/css">
+        img.wp-smiley,
+        img.emoji {
+            display: inline !important;
+            border: none !important;
+            box-shadow: none !important;
+            height: 1em !important;
+            width: 1em !important;
+            margin: 0 .07em !important;
+            vertical-align: -0.1em !important;
+            background: none !important;
+            padding: 0 !important;
+        }
+
+        #ContactMe a {
+            display: inline-block;
+            padding-left: 10px
+        }
+    </style>
+</head>
+<body class="home blog">
+    <div class="img" style="margin:0;padding:0">
+        <img src="~/assets/frontend/images/tooopen.jpg" height="300" width="100%">
+        @*<div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="container-full ">
+                        <div id="myCarousel" class="carousel" data-ride="carousel" data-interval="5000">
+                     
+                            <ol class="carousel-indicators">
+                                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                <li data-target="#myCarousel" data-slide-to="1"></li>
+                                <li data-target="#myCarousel" data-slide-to="2"></li>
+                            </ol>
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <img src="@Url.Content("~/Assets/FrontEnd/images/banner1.jpg")" alt="First slide">
+                                    <div class="container">
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <img src="@Url.Content("~/Assets/FrontEnd/images/banner4.jpg")" alt="Second slide">
+                                    <div class="container">
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <img src="@Url.Content("~/Assets/FrontEnd/images/banner5.jpg")" alt="Third slide">
+                                    <div class="container">
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                            <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    </div>
+
+    <div class="topbar">
+        <div class="inner">
+            <ul class="nav">
+                <li id="menu-item-180" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-180">
+                    @Html.ActionLink("首页", "Index", "Home")
+                </li>
+                @Html.Action("showCates", "Home")
+            </ul>
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="content">
+            @RenderBody()
+        </div>
+
+        <div class="sidebar">
+
+            <img src="~/Assets/FrontEnd/images/2.jpg" height="150" width="300" />
+            <div class="widget widget_links">
+                <h3 class="widget-tit">音乐盒</h3>
+                <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=300 height=110 src="//music.163.com/outchain/player?type=0&id=732170431&auto=1&height=90"></iframe>
+            </div>
+            <div class="widget widget_recent_entries">
+                <h3 class="widget-tit">最新发表</h3>
+                <ul style="font-size:14px;font-family:微软雅黑">
+                    @Html.Action("showLastest", "Home")
+                </ul>
+            </div>
+            <div class="widget widget_links">
+                <h3 class="widget-tit">友情链接</h3>
+                <ul class='xoxo blogroll' style="font-family: 宋体">
+                    @Html.Action("showLinks", "Home")
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="bottom">
+        <div style="color:white;text-align:center;padding-top:15px;font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">
+            <p id="ContactMe">
+                <a onclick="qq()"><i class="fa fa-qq" style="color:azure;font-size:24px"></i></a>
+                <a onclick="weixin()"><i class="fa fa-weixin" style="color:azure;font-size:24px"></i></a>
+                <a target="_blank" rel="nofollow" href="tel:xxxx-xxxx-xxxx"><i class="fa fa-phone" style="color:azure;font-size:24px"></i></a>
+            </p>
+            <br />
+            <p>COPYRIGHT 2020 .NET MVC BLOG. ALL RIGHTS RESERVED.</p>
+            <p>ICP备xxx-xxx-xxx号</p>
+        </div>
+    </div>
+    <script type='text/javascript' src='http://yispace.net/wp-includes/js/wp-embed.min.js?ver=4.5.2'></script>
+    <script type="text/javascript">
+
+
+    </script>
+    
+</body>
+</html>

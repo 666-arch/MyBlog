@@ -1,0 +1,8 @@
+﻿@using Model.EF
+@model IEnumerable<cate>
+    @foreach (var item in Model)
+    {
+        <li id="menu-item-180" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-180">
+            @Html.ActionLink(@item.catname,"CateToArticle","Home",new {id=@item.id },"")
+        </li>
+    }

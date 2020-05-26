@@ -1,0 +1,70 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/Assets/BackEnd/js/jquery-3.2.1.js"></script>
+    <link href="~/Assets/BackEnd/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Assets/BackEnd/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnAdd").click(function () {
+                if (!$("#userName").val()) {
+                    alert('请输入用户名');
+                    return;
+                }
+                if (!$('#pwd').val()==null) {
+                    alert('请输入密码');
+                    return;
+                }
+                if ($('#pwd').val()!=$('#pwds').val()) {
+                    alert('两次密码输入不一致');
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: "CheckAddUser",
+                        data: $("#form-user-add").serialize(),
+                        dataType: "json",
+                        async: true,
+                        success: function (msg) {
+                            if (msg.status == 1) {
+                                window.parent.location.reload();
+                                //layer.getFrameIndex layer内置方法
+                                var index = parent.layer.getFrameIndex(window.name);//先得到当前iframe层的索引
+                                parent.layer.close(index);//再执行关闭 
+                            } else {
+                                $("#texterror").text(msg.data)
+                            }
+                        }
+                    })
+                }
+            })
+        })
+    </script>
+    <title>添加用户信息</title>
+</head>
+<body>
+    <div class="" style="align-items:center;padding:40px"> 
+        <form id="form-user-add" method="post">
+            <div class="form-group">
+                <label for="userName">用户名：</label>
+                <input type="text" class="form-control" id="userName" name="userName" style="width:300px;" />
+            </div>
+            <span id="texterror" style="color:red"></span>
+            <div class="form-group">
+                <label for="userName">密码：</label>
+                <input type="password" class="form-control" id="pwd" name="pwd" style="width:300px;" />
+            </div>
+            <div class="form-group">
+                <label for="userName">请再次输入密码：</label>
+                <input type="password" class="form-control" id="pwds" name="pwds" style="width:300px;" />
+            </div>
+            <br />
+            <button type="button" class="btn btn-primary" style="margin-right:30px;" id="btnAdd">添加</button>
+            <input type="reset" class="btn btn-danger" value="重置" />
+        </form>
+    </div>
+</body>
+</html>

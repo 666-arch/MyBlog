@@ -1,0 +1,117 @@
+﻿@using PagedList.Mvc
+@using Model.EF
+@model PagedList.IPagedList<cate>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutBackHome.cshtml";
+}
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<div class="crumb-wrap">
+    <div class="crumb-list">
+        <i class="icon-font"></i>
+        <a href="/Admin/Info">首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">分类管理</span>
+    </div>
+</div>
+<div class="result-wrap">
+    <form name="myform" id="myform" method="post">
+        <div class="result-title">
+            <div class="result-list">
+                <a href="#" onclick="addLayer()"><i class="icon-font"></i>新增分类</a>
+                @*javascript:void(0)： 保留a标签样式，但不触发js脚本，防止链接跳转到其他页面 *@
+                <a href="javascript:void(0)" id="batchDel" onclick="manyCate_del()"><i class="icon-font"></i> 批量删除</a>
+            </div>
+        </div>
+
+        <div class="result-content">
+            <table class="result-tab" width="100%">
+                <tr>
+                     <th class="tc" width="5%">
+                         <input class="allChoose" name="" type="checkbox"/>
+                     </th>
+                    <th>ID</th>
+                    <th>分类名</th>
+                    <th>操作</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="tc">
+                            <input name="id[]" value="@item.id" type="checkbox"class="singleChoose"/>
+                        </td>
+                        <td>@item.id</td>
+                        <td>@item.catname</td>
+                        <td>
+                            <a href="#" class="link-update" onclick="updateLayer(@item.id)">修改</a>
+                            <a href="#" class="link-del" onclick="cate_del(@item.id)">删除</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="list-page">
+                @Html.PagedListPager(Model,page=>Url.Action("Index",new {page}))
+
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    function addLayer()
+    {
+        layer.open({
+            type: 2,
+            title: "新增文章类别",
+            maxmin: true,
+            shadeClose: true,
+            area: ['500px', '400px'],
+            content: "/Cate/AddCate"
+        });
+    }
+
+    function updateLayer(id)
+    {
+        layer.open({
+            type: 2,
+            title: "修改分类",
+            maxmin: true,
+            shadeClose: true,
+            area: ['500px', '400px'],
+            content: "/Cate/UpdateCate?id=" + id
+        })
+    }
+    function cate_del(id, obj)
+    {
+        layer.confirm('确定要删除吗？', function (index) {
+            $.post("Cate/DeleteCate", { id: id })
+            $(obj).parent("tr").remove();
+            layer.msg("删除成功！", { icon: 1, time: 1000 });
+        })
+    }
+    //向全选按钮添加change事件
+    $('.allChoose').on('change', function () {
+        if ($(this).is(':checked')) {
+            //设置全选属性为checked
+            $('.singleChoose').prop('checked', 'checked');
+        } else {
+            $('.singleChoose').prop('checked', '');
+        }
+    })
+    //批量删除
+    function manyCate_del()
+    {
+        var idStr = '';
+        $('.singleChoose').each(function () {
+            if ($(this)[0].checked) {
+                idStr += $(this).val() + ',';
+            }
+        });
+        if (!idStr) {
+            alert('请至少勾选一个！');
+            return;
+        }
+        layer.confirm('确定要删除吗？', function (index) {
+            $.get("Cate/SelectAllDelete", { idStr: idStr })
+            layer.msg('删除成功', { icon: 1, time: 1000 });
+            window.location.reload();
+        });
+    }
+</script>

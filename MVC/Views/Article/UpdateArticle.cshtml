@@ -1,0 +1,122 @@
+﻿@using Model.EF
+@model IEnumerable<cate>
+@{
+    ViewBag.Title = "UpdateArticle";
+    Layout = "~/Views/Shared/_LayoutBackHome.cshtml";
+}
+<div class="crumb-wrap">
+    <div class="crumb-list"><i class="icon-font"></i><a href="~/Admin/Index">首页</a><span class="crumb-step">&gt;</span><a class="crumb-name" href="~/Article/Design">文章管理</a><span class="crumb-step">&gt;</span><span>新增文章</span></div>
+</div>
+<div class="result-wrap">
+    <div class="result-content">
+        <form id="form-article-update" name="form-article-update" method="post" enctype="multipart/form-data">
+            <table class="insert-tab" width="100%">
+                <tbody>
+                    <tr>
+                        <th><i class="require-red">*</i>文章编号：</th>
+                        <td>
+                            <input type="text" class="common-text require" id="id" name="id" value="@ViewBag.id" readonly style="width:20px;" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th><i class="require-red">*</i>标题：</th>
+                        <td>
+                            <input class="common-text required" id="title" name="title" size="50" value="@ViewBag.atitle" type="text">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th width="120"><i class="require-red">*</i>分类：</th>
+                        <td>
+                            <select name="catid" id="catid" class="required">
+                                @foreach (var item in Model)
+                                {
+                                    <option value="@item.id">@item.catname</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>作者：</th>
+                        <td>
+                            <input class="common-text" name="author" size="50" value="@ViewBag.author" type="text" readonly>
+                            <input type="hidden" name="creator" value="@ViewBag.aid" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>描述：</th>
+                        <td><input class="common-text" name="desc" size="50" type="text" value="@ViewBag.desc"></td>
+                    </tr>
+
+                    <tr>
+                        <th>内容：</th>
+                        <td>
+                            <textarea id="editor" name="content" type="text/plain" style="width:1024px;height:500px;"></textarea>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th></th>
+                        <td>
+                            <button class="btn btn-primary btn6 mr10" type="button" id="btnUpdate">提交修改</button>
+                            <input class="btn btn6" type="reset" value="重置">
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+<p id="ArticleContent" hidden>
+    @ViewBag.content
+</p>
+<script type="text/javascript">
+    //初始化编辑器
+    var ue = UE.getEditor('editor');
+</script>
+<script>
+    var u = $('#ArticleContent').text();
+    ue.ready(function () {
+        //设置富文本的内容
+        ue.setContent(u);
+    })
+</script>
+
+<p id="indexUrl" hidden>
+    @Href("~/Article")
+</p>
+<script type="text/javascript">
+    $("#btnUpdate").click(function () {
+        if (!$('#title').val()) {
+            alert("轻松输入文章标题！");
+            return;
+        }
+        if (!$('#catid').val()) {
+            alert('请选择分类！');
+            return;
+        } else {
+            $.ajax({
+                type: "post",
+                url: "IsCheckArticleUpdate",
+                data: $("#form-article-update").serialize(),
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        layer.msg(msg.data);
+                        window.location.href = $("#indexUrl").text();
+                    } else {
+                        layer.msg(msg.data);
+                    }
+                }
+            })
+        }
+    })
+</script>
+<script>
+    //博文高亮显示
+    SyntaxHighlighter.all();
+</script>

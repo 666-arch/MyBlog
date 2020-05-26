@@ -1,0 +1,8 @@
+﻿@using Model.EF
+@model IEnumerable<link>
+@foreach (var item in Model)
+{
+    <li>
+        <a href="@item.url" rel="friend" target="_blank">@item.title</a>
+    </li>
+}

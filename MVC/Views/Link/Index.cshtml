@@ -1,0 +1,109 @@
+﻿@using PagedList.Mvc
+@using Model.EF
+@model PagedList.IPagedList<link>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutBackHome.cshtml";
+}
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<div class="crumb-wrap">
+    <div class="crumb-list"><i class="icon-font"></i><a href="/Admin/Info">首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">链接管理</span></div>
+</div>
+<div class="result-wrap">
+    <form name="myform" id="myform" method="post">
+        <div class="result-title">
+            <div class="result-list">
+                <a onclick="addLayer()"><i class="icon-font"></i>新增链接</a>
+                <a id=" batchDel" href="javascript:void(0)" onclick="many_del()"><i class="icon-font"></i>批量删除</a>
+            </div>
+        </div>
+        <div class="result-content">
+            <table class="result-tab" width="100%">
+                <tr>
+                    <th class="tc" width="5%"><input type="checkbox" class="allChoose" /></th>
+                    <th>链接编号</th>
+                    <th>链接名</th>
+                    <th>URL</th>
+                    <th>描述</th>
+                    <th>操作</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="tc"><input type="checkbox"value="@item.id" class="singleChoose"/></td>
+                        <td>@item.id</td>
+                        <td>@item.title</td>
+                        <td>@item.url</td>
+                        <td>@item.desc</td>
+                        <td>
+                            <a class="link-update" href="#" onclick="updateLayer(@item.id)">修改</a>
+                            <a class="link-del" href="#" onclick="link_del(@item.id,this)">删除</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="list-page">
+                @Html.PagedListPager(Model,page=>Url.Action("Index",new { page}))
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    function addLayer()
+    {
+        layer.open({
+            type: 2,
+            title: "新增链接",
+            maxmin: true,
+            shadeClose: true,
+            area: ['510px', '460px'],
+            content: 'Link/AddLink'
+        });
+    }
+    function updateLayer(id)
+    {
+        layer.open({
+            type: 2,
+            title: "修改链接",
+            maxmin: true,
+            shadeClose: true,
+            area:['510px', '460px'],
+            content: 'Link/UpdateLinks?id=' + id
+        });
+    }
+    function link_del(id, obj)
+    {
+        layer.confirm('确认要删除吗？', function () {
+            $.get("Link/DeleteLink", { id: id })
+            $(obj).parent("tr").remove();
+            layer.msg('已删除', { icon: 1, time: 1000 });
+            window.location.reload();
+        });
+    }
+    $('.allChoose').on('change', function () {
+        if ($(this).is(':checked')) {
+            $('.singleChoose').prop('checked', 'checked');
+        } else {
+            $('.singleChoose').prop('checked', '');
+        }
+    })
+    function many_del()
+    {
+        var idStr = '';
+        $(".singleChoose").each(function () {
+            if ($(this)[0].checked) {
+                idStr += $(this).val() + ',';
+            }
+        });
+        if (!idStr) {
+            alert('请至少勾选一个进行删除！');
+            return;
+        } else {
+            layer.confirm('确定要删除吗？', function (index) {
+                $.get("Link/ManyDelete", { idStr: idStr });
+                layer.msg('删除成功！', { icon: 1, time: 2000 })
+                window.location.reload();
+            });
+        }
+    }
+</script>
